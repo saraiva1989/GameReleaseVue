@@ -7,7 +7,6 @@
           <v-img
             :src="jogo.background"
             class="white--text align-end"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
             height="200px"
           >
             <v-card-title v-text="jogo.nome"></v-card-title>
@@ -52,7 +51,6 @@ export default {
                 this.listaJogos.push(element);
               });
               this.carregando = false;
-              console.log(this.listaJogos);
             })
             .catch(e => {
               this.errors.push(e);
