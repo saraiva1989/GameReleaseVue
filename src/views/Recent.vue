@@ -2,9 +2,8 @@
   <div>
     <p>recent</p>
     <v-card class="mx-auto" max-width="500" dark>
-      <v-container fluid>
-        <v-row dense>
-          <v-col v-for="jogo in listaJogos" :key="jogo.id">
+      <v-container fluid v-for="jogo in listaJogos" :key="jogo.id">
+          
             <v-card>
               <v-img
                 :src="jogo.background"
@@ -15,8 +14,6 @@
                 <v-card-title v-text="jogo.nome"></v-card-title>
               </v-img>
             </v-card>
-          </v-col>
-        </v-row>
       </v-container>
     </v-card>
   </div>
