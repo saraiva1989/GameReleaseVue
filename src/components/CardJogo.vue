@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-img :src="carregarImagem" class="white--text align-end" height="200px" width="400px">
+    <v-img :src="carregarImagem" class="white--text align-end" height="200px">
       <v-card-title v-text="propjogo.nome"></v-card-title>
     </v-img>
   </v-card>
@@ -17,7 +17,9 @@ export default {
     },
     computed: {
         carregarImagem() {
-            var imagem = this.propjogo.videoimagepreview == null ? this.propjogo.background : this.propjogo.videoimagepreview
+            var imagem = this.propjogo.videoimagepreview != null ? 
+            this.propjogo.videoimagepreview : this.propjogo.background != null ? this.propjogo.background :
+            "https://arcadaweb.com.br/img/cardnotfound.jpg"
             return imagem
         }
 
