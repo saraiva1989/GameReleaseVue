@@ -3,7 +3,8 @@
     <p>recent</p>
     <v-card class="mx-auto" max-width="500" dark>
       <v-container fluid v-for="jogo in listaJogos" :key="jogo.id">
-        <v-card>
+        <cardjogo :propjogo="jogo"></cardjogo>
+        <!-- <v-card>
           <v-img
             :src="jogo.background"
             class="white--text align-end"
@@ -11,7 +12,7 @@
           >
             <v-card-title v-text="jogo.nome"></v-card-title>
           </v-img>
-        </v-card>
+        </v-card> -->
       </v-container>
     </v-card>
   </div>
@@ -19,8 +20,12 @@
 
 <script>
 import axios from "axios";
+import cardjogo from "../components/CardJogo.vue"
 export default {
   name: "Recent",
+  components: {
+    cardjogo
+  },
 
   data() {
     return {
