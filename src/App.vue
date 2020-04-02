@@ -2,6 +2,12 @@
 p {
   color: white
 }
+.primaryback {
+  background: #1e1e1e;
+}
+.primarytext {
+  color: white;
+}
 </style>
 
 <template>

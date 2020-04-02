@@ -1,27 +1,49 @@
+<style scoped>
+.header {
+  width: 100%;
+  position: -webkit-sticky; /* Necessário para funcionar no Safari */
+  position: sticky;
+  top: 0;
+  background: #1e1e1e;
+  z-index: 1;
+}
+p {
+  font-size: 20px;
+  margin-top: 10px
+}
+</style>
+
 <template>
   <div>
+    <v-dialog dark v-model="dialogFilter" max-width="290">
+      <v-card>
+        <v-card-title class="headline">Filter</v-card-title>
+
+        <v-card-text>Adicionar os filtros</v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="blue" text @click="dialogFilter = false">Cancel</v-btn>
+
+          <v-btn color="blue" text @click="dialogFilter = false">Search</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-card class="mx-auto" max-width="700" dark>
-      <v-row>
+      <v-row class="header">
         <v-col>
           <p>Recent Release</p>
         </v-col>
-        <v-col class="text-right">
-          <v-btn class="ma-2" text icon color="white lighten-2">
+        <v-col class="text-right primaryback">
+          <v-btn class="ma-2" text icon color="white lighten-2" @click.stop="dialogFilter = true">
             <v-icon>mdi-filter</v-icon>
           </v-btn>
         </v-col>
       </v-row>
+
       <v-container fluid v-for="jogo in listaJogos" :key="jogo.id">
         <cardjogo :propjogo="jogo"></cardjogo>
-        <!-- <v-card>
-          <v-img
-            :src="jogo.background"
-            class="white--text align-end"
-            height="200px"
-          >
-            <v-card-title v-text="jogo.nome"></v-card-title>
-          </v-img>
-        </v-card>-->
       </v-container>
     </v-card>
   </div>
@@ -42,6 +64,7 @@ export default {
       carregando: false,
       dataInicio: null,
       dataFim: null,
+      dialogFilter: false,
       listaJogos: []
     };
   },
@@ -90,7 +113,6 @@ export default {
         .then(response => {
           // JSON responses are automatically parsed.
           this.next = response.data.next.replace(/&/g, "amp;");
-          console.log(this.next);
           this.listaJogos = response.data.retorno;
         })
         .catch(e => {
