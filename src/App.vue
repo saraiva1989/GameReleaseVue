@@ -12,7 +12,7 @@ p {
       <router-view></router-view>
     </v-content>
 
-    <v-bottom-navigation :value="activeBtn" grow color="white" fixed dark>
+    <v-bottom-navigation :value="activeBtn" grow color="blue" dark app>
       <v-btn @click="goto(1)">
         <span>Recent release</span>
         <v-icon>mdi-history</v-icon>

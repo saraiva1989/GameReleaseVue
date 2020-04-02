@@ -4,7 +4,7 @@
     <v-card class="mx-auto" max-width="500" dark>
       <v-container fluid>
         <v-row dense>
-          <v-col v-for="jogo in jogos" :key="jogo.id">
+          <v-col v-for="jogo in listaJogos" :key="jogo.id">
             <v-card>
               <v-img
                 :src="jogo.background"
@@ -27,34 +27,46 @@ import axios from "axios";
 export default {
   name: "Recent",
 
-  data: () => ({
-    jogos: [],
-    cards: [
-      {
-        title: "Pre-fab homes",
-        src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
-        flex: 12
-      },
-      {
-        title: "Favorite road trips",
-        src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-        flex: 6
-      },
-      {
-        title: "Best airlines",
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
-        flex: 6
-      }
-    ]
-  }),
+  data() {
+    return {
+      next: null,
+      carregando: false,
+      listaJogos: []
+    };
+  },
   methods: {
     carregarJogo() {
+      window.onscroll = () => {
+        let bottomOfWindow =
+          document.documentElement.scrollTop + window.innerHeight ===
+          document.documentElement.offsetHeight;
+
+        if (bottomOfWindow && !this.carregando) {
+          if(this.next == null) return;
+          this.carregando = true
+          axios
+            .get(`https://arcadaweb.com.br/api/gamerelease/listagames.php?next=${this.next}`)
+            .then(response => {
+              // JSON responses are automatically parsed.
+              this.next = response.data.next
+              response.data.retorno.forEach(element => {
+                this.listaJogos.push(element)
+              });
+              this.carregando = false
+              console.log(this.listaJogos)
+            })
+            .catch(e => {
+              this.errors.push(e);
+            });
+        }
+      };
       axios
         .get(`https://arcadaweb.com.br/api/gamerelease/listagames.php`)
         .then(response => {
           // JSON responses are automatically parsed.
-          debugger // eslint-disable-line
-          this.jogos = response.data.retorno;
+          this.next = response.data.next;
+          this.listaJogos = response.data.retorno;
+          //debugger; // eslint-disable-line
         })
         .catch(e => {
           this.errors.push(e);
