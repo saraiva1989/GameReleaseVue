@@ -15,6 +15,9 @@ p {
 
 <template>
   <div>
+    <div class="loading" v-if="carregando">
+      <v-progress-circular indeterminate color="white"></v-progress-circular>
+    </div>
     <v-dialog dark v-model="dialogFilter" max-width="290">
       <v-card>
         <v-card-title class="headline">Filter</v-card-title>
@@ -113,6 +116,8 @@ p {
 </template>
 
 <script>
+/* eslint-disable */
+
 import axios from "axios";
 import cardjogo from "../components/CardJogo.vue";
 export default {
@@ -125,7 +130,9 @@ export default {
     return {
       searchName: null,
       fiterDateStart: new Date().toISOString().substr(0, 10),
-      fiterDateEnd: new Date().toISOString().substr(0, 10),
+      fiterDateEnd: new Date(new Date().setDate(new Date().getDate() + 30))
+        .toISOString()
+        .substr(0, 10),
       modalDataStart: false,
       modalDataEnd: false,
 
@@ -142,28 +149,40 @@ export default {
       dataInicio: null,
       dataFim: null,
       dialogFilter: false,
-      listaJogos: []
+      listaJogos: [],
+      urlBase: "https://arcadaweb.com.br/api/gamerelease/listagames.php?"
     };
   },
   methods: {
     search() {
       this.dialogFilter = false;
-      console.log(
-        `console - ${this.consoleSelected.nome} | inicio ${this.fiterDateStart} | fim - ${this.fiterDateEnd} |
-        nome - ${this.searchName}`
-      );
+      this.dataInicio = this.fiterDateStart;
+      this.dataFim = this.fiterDateEnd;
+      // console.log(
+      //   `console - ${this.consoleSelected.nome} | inicio ${this.fiterDateStart} | fim - ${this.fiterDateEnd} |
+      //   nome - ${this.searchName}`
+      // );
+      if (this.searchName !== null && this.searchName != "") {
+        this.carregarJogo(`${this.urlBase}nome=${this.searchName}`);
+      } else {
+        this.carregarJogo(
+          `${this.urlBase}order=released&datainicio=${this.dataInicio}&datafim=${this.dataFim}&plataforma=${this.consoleSelected.id}`
+        );
+      }
     },
+    carregarJogoFiltro() {
+      if (this.searchName !== null) {
+        this.carregarJogo(`${this.urlBase}nome=${this.searchName}`);
+      }
+    },
+
     setData() {
       var dataInicio = new Date().setDate(new Date().getDate() - 92);
-      dataInicio = new Date(dataInicio).toLocaleDateString("pt-BR");
-      dataInicio = dataInicio.split("/");
-      this.dataInicio = `${dataInicio[2]}-${dataInicio[1]}-${dataInicio[0]}`;
-      var dataFim = new Date().toLocaleDateString("pt-BR");
-      dataFim = dataFim.split("/");
-      this.dataFim = `${dataFim[2]}-${dataFim[1]}-${dataFim[0]}`;
+      this.dataInicio = new Date(dataInicio).toISOString().substr(0, 10);
+      this.dataFim = new Date().toISOString().substr(0, 10);
     },
-    carregarJogo() {
-      this.setData();
+    carregarJogo(url) {
+      this.carregando = true;
       window.onscroll = () => {
         let bottomOfWindow =
           document.documentElement.scrollTop + window.innerHeight ===
@@ -172,11 +191,10 @@ export default {
         if (bottomOfWindow && !this.carregando) {
           if (this.next == null) return;
           this.carregando = true;
+          this.next = this.next.replace(/&/g, "amp;");
           if (this.listaJogos.length > 20) this.listaJogos.splice(0, 20);
           axios
-            .get(
-              `https://arcadaweb.com.br/api/gamerelease/listagames.php?next=${this.next}`
-            )
+            .get(`${this.urlBase}next=${this.next}`)
             .then(response => {
               // JSON responses are automatically parsed.
               this.next = response.data.next.replace(/&/g, "amp;");
@@ -186,26 +204,30 @@ export default {
               this.carregando = false;
             })
             .catch(e => {
-              this.errors.push(e);
+              console.log(e)
+              this.carregando = false;
             });
         }
       };
       axios
-        .get(
-          `https://arcadaweb.com.br/api/gamerelease/listagames.php?datainicio=${this.dataInicio}&datafim=${this.dataFim}&order=-released`
-        )
+        .get(url)
         .then(response => {
           // JSON responses are automatically parsed.
-          this.next = response.data.next.replace(/&/g, "amp;");
+          this.next = response.data.next
           this.listaJogos = response.data.retorno;
+          this.carregando = false;
         })
         .catch(e => {
-          this.errors.push(e);
+          this.carregando = false;
+          console.log(e);
         });
     }
   },
   mounted() {
-    this.carregarJogo();
+    this.setData();
+    this.carregarJogo(
+      `${this.urlBase}datainicio=${this.dataInicio}&datafim=${this.dataFim}&order=-released`
+    );
   }
 };
 </script>

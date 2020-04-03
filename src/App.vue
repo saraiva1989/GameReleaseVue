@@ -1,12 +1,19 @@
 <style>
 p {
-  color: white
+  color: white;
 }
 .primaryback {
   background: #1e1e1e;
 }
 .primarytext {
   color: white;
+}
+
+.loading {
+  position: fixed;
+  z-index: 1;
+  margin-left: calc(50% - 15px);
+  margin-top: 50%;
 }
 </style>
 
@@ -58,13 +65,13 @@ export default {
             params: { errors: "123" }
           });
           break;
-          case 2:
+        case 2:
           this.$router.push({
             name: "NextDays",
             params: { errors: "123" }
           });
           break;
-          case 3:
+        case 3:
           this.$router.push({
             name: "Favorites",
             params: { errors: "123" }
