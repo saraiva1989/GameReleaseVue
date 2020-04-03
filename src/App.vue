@@ -1,4 +1,19 @@
 <style>
+.header {
+  width: 100%;
+  position: -webkit-sticky; /* Necessário para funcionar no Safari */
+  position: sticky;
+  top: 0;
+  background: #1e1e1e;
+  z-index: 1;
+}
+
+.header p {
+  font-size: 20px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
 p {
   color: white;
 }
@@ -63,26 +78,26 @@ export default {
           this.$router.push({
             name: "Recent",
             params: { errors: "123" }
-          });
+          }).catch(() => {});
           break;
         case 2:
           this.$router.push({
             name: "NextDays",
             params: { errors: "123" }
-          });
+          }).catch(() => {});
           break;
         case 3:
           this.$router.push({
             name: "Favorites",
             params: { errors: "123" }
-          });
+          }).catch(() => {});
           break;
 
         default:
           this.$router.push({
             name: "Recent",
             params: { errors: "123" }
-          });
+          }).catch(() => {});
           break;
       }
     }

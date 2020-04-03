@@ -1,16 +1,5 @@
 <style scoped>
-.header {
-  width: 100%;
-  position: -webkit-sticky; /* Necessário para funcionar no Safari */
-  position: sticky;
-  top: 0;
-  background: #1e1e1e;
-  z-index: 1;
-}
-p {
-  font-size: 20px;
-  margin-top: 10px;
-}
+
 </style>
 
 <template>
@@ -98,7 +87,7 @@ p {
     </v-dialog>
     <v-card class="mx-auto" max-width="700" dark>
       <v-row class="header">
-        <v-col>
+        <v-col cols="8">
           <p>Recent Release</p>
         </v-col>
         <v-col class="text-right primaryback">
