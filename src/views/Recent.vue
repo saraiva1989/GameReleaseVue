@@ -106,7 +106,7 @@
 
 <script>
 /* eslint-disable */
-
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import axios from "axios";
 import cardjogo from "../components/CardJogo.vue";
 export default {
@@ -142,6 +142,13 @@ export default {
       urlBase: "https://arcadaweb.com.br/api/gamerelease/listagames.php?"
     };
   },
+
+computed:{
+  // ...mapState('listarJogos', ['consoleItens', 'searchName']),
+  // ...mapGetters('listarJogos', ['consoleSelected'])
+  //  ...mapMutations('listarJogos', ['consoleSelected'])
+},
+
   methods: {
     search() {
       this.dialogFilter = false;

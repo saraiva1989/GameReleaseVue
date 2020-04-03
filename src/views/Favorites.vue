@@ -1,10 +1,25 @@
 <template>
-  <p>favorites</p>
+<div>
+  <p>favorites {{this.$store.state.listarJogos.abc}}</p>
+  <p>favorites {{abc}}</p>
+  </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
-name: 'Favorites'
+name: 'Favorites',
+data(){
+  return{
+
+  }
+},
+computed: {
+  ...mapState('listarJogos', ['abc'])
+}
+  
+
 }
 </script>
 
