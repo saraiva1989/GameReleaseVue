@@ -3,6 +3,7 @@
     <div class="loading" v-if="this.$store.state.listarJogos.GET_CARREGANDO">
       <v-progress-circular indeterminate color="white"></v-progress-circular>
     </div>
+    <detalhes :dialogDetalhes="dialogDetalhes" :jogo="jogo" @cancel="dialogDetalhes = false"></detalhes>
     <v-card class="mx-auto" max-width="700" dark>
       <v-row class="header">
         <v-col cols="12">
@@ -10,7 +11,7 @@
         </v-col>
       </v-row>
       <v-container fluid v-for="jogo in listaJogos" :key="jogo.id">
-        <cardjogo :propjogo="jogo"></cardjogo>
+        <cardjogo :propjogo="jogo" @filhoclickCard="detalhes"></cardjogo>
       </v-container>
     </v-card>
   </div>
@@ -18,17 +19,21 @@
 
 <script>
 import cardjogo from "../components/CardJogo.vue";
+import detalhes from "../components/Detalhes.vue";
 export default {
   name: "NextDays",
   components: {
-    cardjogo
+    cardjogo,
+    detalhes
   },
   data() {
     return {
       dataInicio: new Date().toISOString().substr(0, 10),
       dataFim: new Date(new Date().setDate(new Date().getDate() + 30))
         .toISOString()
-        .substr(0, 10)
+        .substr(0, 10),
+      dialogDetalhes: false,
+      jogo: null
     };
   },
   computed: {
@@ -42,6 +47,10 @@ export default {
     }
   },
   methods: {
+      detalhes(payload) {
+      this.jogo = payload
+      this.dialogDetalhes = true
+    },
     carregarJogo(queryString) {
       window.onscroll = () => {
         let bottomOfWindow =

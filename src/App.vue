@@ -8,6 +8,11 @@
   z-index: 1;
 }
 
+.v-dialog--fullscreen {
+  max-width: 700px;
+  position: initial;
+}
+
 .header p {
   font-size: 20px;
   margin-top: 10px;
@@ -16,6 +21,11 @@
 
 p {
   color: white;
+  margin: 0px 0px 0px 0px;
+}
+
+.detalhesjogo p {
+  margin-bottom: 0px !important;
 }
 .primaryback {
   background: #1e1e1e;
@@ -75,29 +85,37 @@ export default {
     goto(pagina) {
       switch (pagina) {
         case 1:
-          this.$router.push({
-            name: "Recent",
-            params: { errors: "123" }
-          }).catch(() => {});
+          this.$router
+            .push({
+              name: "Recent",
+              params: { errors: "123" }
+            })
+            .catch(() => {});
           break;
         case 2:
-          this.$router.push({
-            name: "NextDays",
-            params: { errors: "123" }
-          }).catch(() => {});
+          this.$router
+            .push({
+              name: "NextDays",
+              params: { errors: "123" }
+            })
+            .catch(() => {});
           break;
         case 3:
-          this.$router.push({
-            name: "Favorites",
-            params: { errors: "123" }
-          }).catch(() => {});
+          this.$router
+            .push({
+              name: "Favorites",
+              params: { errors: "123" }
+            })
+            .catch(() => {});
           break;
 
         default:
-          this.$router.push({
-            name: "Recent",
-            params: { errors: "123" }
-          }).catch(() => {});
+          this.$router
+            .push({
+              name: "Recent",
+              params: { errors: "123" }
+            })
+            .catch(() => {});
           break;
       }
     }

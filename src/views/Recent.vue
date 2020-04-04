@@ -8,6 +8,7 @@
     </div>
     <!-- @filhosearch e @ cancel são eventos acionados pelo componente filho -->
     <filtro :dialogFilter="dialogFilter" @filhosearch="search" @cancel="dialogFilter = false"></filtro>
+    <detalhes :dialogDetalhes="dialogDetalhes" :jogo="jogo" @cancel="dialogDetalhes = false"></detalhes>
 
     <v-card class="mx-auto" max-width="700" dark>
       <v-row class="header">
@@ -22,7 +23,7 @@
       </v-row>
 
       <v-container fluid v-for="jogo in listaJogos" :key="jogo.id">
-        <cardjogo :propjogo="jogo"></cardjogo>
+        <cardjogo :propjogo="jogo" @filhoclickCard="detalhes"></cardjogo>
       </v-container>
     </v-card>
   </div>
@@ -33,11 +34,13 @@
 import axios from "axios";
 import cardjogo from "../components/CardJogo.vue";
 import filtro from "../components/Filtro.vue";
+import detalhes from "../components/Detalhes.vue";
 export default {
   name: "Recent",
   components: {
     cardjogo,
-    filtro
+    filtro,
+    detalhes
   },
 
   data() {
@@ -45,7 +48,9 @@ export default {
       next: null,
       dataInicio: null,
       dataFim: null,
-      dialogFilter: false
+      dialogFilter: false,
+      dialogDetalhes: false,
+      jogo: null
     };
   },
 
@@ -63,8 +68,12 @@ export default {
   },
 
   methods: {
-    filterCancel(){
-      this.dialogFilter = false
+    detalhes(payload) {
+      this.jogo = payload
+      this.dialogDetalhes = true
+    },
+    filterCancel() {
+      this.dialogFilter = false;
     },
     search(payload) {
       this.$store.commit("listarJogos/SET_LISTAGEM_JOGOS", []);

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog dark v-model="dialogFilter" max-width="290">
+  <v-dialog dark v-model="dialogFilter" persistent max-width="290">
     <v-card>
       <v-card-title class="headline">Filter</v-card-title>
 
