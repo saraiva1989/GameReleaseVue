@@ -1,10 +1,9 @@
 <style scoped>
-
 </style>
 
 <template>
   <div>
-    <div class="loading" v-if="carregando">
+    <div class="loading" v-if="this.$store.state.listarJogos.GET_CARREGANDO">
       <v-progress-circular indeterminate color="white"></v-progress-circular>
     </div>
     <v-dialog dark v-model="dialogFilter" max-width="290">
@@ -106,7 +105,6 @@
 
 <script>
 /* eslint-disable */
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import axios from "axios";
 import cardjogo from "../components/CardJogo.vue";
 export default {
@@ -117,58 +115,79 @@ export default {
 
   data() {
     return {
-      searchName: null,
       fiterDateStart: new Date().toISOString().substr(0, 10),
       fiterDateEnd: new Date(new Date().setDate(new Date().getDate() + 30))
         .toISOString()
         .substr(0, 10),
       modalDataStart: false,
       modalDataEnd: false,
-
-      consoleSelected: { nome: "Todos", id: "" },
-      consoleItens: [
-        { nome: "All", id: "" },
-        { nome: "PS4", id: "18" },
-        { nome: "Xbox One", id: "1" },
-        { nome: "PC", id: "4" },
-        { nome: "Switch", id: "7" }
-      ],
+      // pode ser feito dessa forma se for fazer na propria pagina ou usar o vuex (store)
+      // consoleSelected: { nome: "Todos", id: "" },
+      // consoleItens: [
+      //   { nome: "All", id: "" },
+      //   { nome: "PS4", id: "18" },
+      //   { nome: "Xbox One", id: "1" },
+      //   { nome: "PC", id: "4" },
+      //   { nome: "Switch", id: "7" }
+      // ],
       next: null,
-      carregando: false,
       dataInicio: null,
       dataFim: null,
-      dialogFilter: false,
-      listaJogos: [],
-      urlBase: "https://arcadaweb.com.br/api/gamerelease/listagames.php?"
+      dialogFilter: false
     };
   },
 
-computed:{
-  // ...mapState('listarJogos', ['consoleItens', 'searchName']),
-  // ...mapGetters('listarJogos', ['consoleSelected'])
-  //  ...mapMutations('listarJogos', ['consoleSelected'])
-},
+  computed: {
+    searchName: {
+      get() {
+        //pega os dados que estão no state [pasta listarjogos]
+        return this.$store.state.listarJogos.GET_SEARCH_NAME;
+      },
+      set(value) {
+        //atualiza o dado da store usando o mutation
+        this.$store.commit("listarJogos/SET_SEARCH_NAME", value);
+      }
+    },
+    consoleSelected: {
+      get() {
+        return this.$store.state.listarJogos.GET_CONSOLE_SELECTED;
+      },
+      set(value) {
+        this.$store.commit("listarJogos/SET_CONSOLE_SELECTED", value);
+      }
+    },
+    listaJogos: {
+      get() {
+        return this.$store.state.listarJogos.GET_LISTAGEM_JOGOS;
+      },
+      set(value) {
+        this.$store.commit("listarJogos/SET_LISTAGEM_JOGOS", value);
+      }
+    },
+    consoleItens: {
+      get() {
+        return this.$store.state.listarJogos.GET_CONSOLE_ITENS;
+      }
+    }
+  },
 
   methods: {
     search() {
+      this.$store.commit("listarJogos/SET_LISTAGEM_JOGOS", []);
       this.dialogFilter = false;
       this.dataInicio = this.fiterDateStart;
       this.dataFim = this.fiterDateEnd;
-      // console.log(
-      //   `console - ${this.consoleSelected.nome} | inicio ${this.fiterDateStart} | fim - ${this.fiterDateEnd} |
-      //   nome - ${this.searchName}`
-      // );
       if (this.searchName !== null && this.searchName != "") {
-        this.carregarJogo(`${this.urlBase}nome=${this.searchName}`);
+        this.carregarJogo(`nome=${this.searchName}`);
       } else {
         this.carregarJogo(
-          `${this.urlBase}order=released&datainicio=${this.dataInicio}&datafim=${this.dataFim}&plataforma=${this.consoleSelected.id}`
+          `order=released&datainicio=${this.dataInicio}&datafim=${this.dataFim}&plataforma=${this.consoleSelected.id}`
         );
       }
     },
     carregarJogoFiltro() {
       if (this.searchName !== null) {
-        this.carregarJogo(`${this.urlBase}nome=${this.searchName}`);
+        this.carregarJogo(`nome=${this.searchName}`);
       }
     },
 
@@ -177,52 +196,30 @@ computed:{
       this.dataInicio = new Date(dataInicio).toISOString().substr(0, 10);
       this.dataFim = new Date().toISOString().substr(0, 10);
     },
-    carregarJogo(url) {
-      this.carregando = true;
+    carregarJogo(queryString) {
       window.onscroll = () => {
         let bottomOfWindow =
           document.documentElement.scrollTop + window.innerHeight ===
           document.documentElement.offsetHeight;
-
-        if (bottomOfWindow && !this.carregando) {
-          if (this.next == null) return;
-          this.carregando = true;
-          this.next = this.next.replace(/&/g, "amp;");
+        if (bottomOfWindow && !this.$store.state.listarJogos.GET_CARREGANDO) {
+          if (this.$store.state.listarJogos.GET_NEXT == null) return;
+          var next = this.$store.state.listarJogos.GET_NEXT.replace(
+            /&/g,
+            "amp;"
+          );
           if (this.listaJogos.length > 20) this.listaJogos.splice(0, 20);
-          axios
-            .get(`${this.urlBase}next=${this.next}`)
-            .then(response => {
-              // JSON responses are automatically parsed.
-              this.next = response.data.next.replace(/&/g, "amp;");
-              response.data.retorno.forEach(element => {
-                this.listaJogos.push(element);
-              });
-              this.carregando = false;
-            })
-            .catch(e => {
-              console.log(e)
-              this.carregando = false;
-            });
+          this.$store.dispatch("listarJogos/REQUEST_JOGOS", `next=${next}`);
         }
       };
-      axios
-        .get(url)
-        .then(response => {
-          // JSON responses are automatically parsed.
-          this.next = response.data.next
-          this.listaJogos = response.data.retorno;
-          this.carregando = false;
-        })
-        .catch(e => {
-          this.carregando = false;
-          console.log(e);
-        });
+      //usado para chamar a action
+      this.$store.dispatch("listarJogos/REQUEST_JOGOS", queryString);
     }
   },
   mounted() {
     this.setData();
+    this.$store.commit("listarJogos/SET_LISTAGEM_JOGOS", []);
     this.carregarJogo(
-      `${this.urlBase}datainicio=${this.dataInicio}&datafim=${this.dataFim}&order=-released`
+      `datainicio=${this.dataInicio}&datafim=${this.dataFim}&order=-released`
     );
   }
 };

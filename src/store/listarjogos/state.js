@@ -1,11 +1,14 @@
 export default {
     abc: "asasas",
-    searchName: null,
-    consoleSelected: {
+    GET_SEARCH_NAME: null,
+    GET_CARREGANDO: false,
+    GET_LISTAGEM_JOGOS: [],
+    GET_NEXT: null,
+    GET_CONSOLE_SELECTED: {
         nome: "Todos",
         id: ""
     },
-    consoleItens: [{
+    GET_CONSOLE_ITENS: [{
             nome: "All",
             id: ""
         },
