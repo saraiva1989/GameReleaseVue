@@ -137,7 +137,7 @@ export default {
         loja.id = this.jogoById.lojas[i].id;
         loja.nome = this.jogoById.lojas[i].nome;
         loja.url = this.jogoById.lojas[i].url;
-        loja.icone = this.retornaIconePlataforma(this.jogoById.lojas[i].id);
+        loja.icone = this.retornaIconeLoja(this.jogoById.lojas[i].id);
         newlojas.push(loja);
       }
       return newlojas;
@@ -170,7 +170,7 @@ export default {
       }
       return icone;
     },
-    retornaIconePlataforma(id) {
+    retornaIconeLoja(id) {
       var icone = null;
       switch (id) {
         case 4:
