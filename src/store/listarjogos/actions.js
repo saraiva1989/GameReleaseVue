@@ -23,5 +23,20 @@ export default {
                 context.commit('SET_CARREGANDO', false)
                 console.log(e);
             });
+    },
+
+    async REQUEST_JOGO_BY_ID(context, payload) {
+        await axios
+            .get(`${urlBase}id=${payload}`)
+            .then(response => {
+                // JSON responses are automatically parsed.
+                context.commit('SET_JOGO_BY_ID', response.data)
+                // context.commit('SET_CARREGANDO', false)
+            })
+            .catch(e => {
+                // context.commit('SET_CARREGANDO', false)
+                context.commit('SET_JOGO_BY_ID', "")
+                console.log(e);
+            });
     }
 }
