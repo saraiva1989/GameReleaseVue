@@ -148,7 +148,7 @@ export default {
       this.$emit('cancel')
       this.jogoById = null
     },
-    retornaIconePlataforma(id) {
+    retornaIconeLoja(id) {
       var icone = null;
       switch (id) {
         case 1:
@@ -170,7 +170,7 @@ export default {
       }
       return icone;
     },
-    retornaIconeLoja(id) {
+    retornaIconePlataforma(id) {
       var icone = null;
       switch (id) {
         case 4:
