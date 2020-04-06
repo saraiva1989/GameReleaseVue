@@ -1,4 +1,5 @@
 <style>
+
 .header {
   width: 100%;
   position: -webkit-sticky; /* Necessário para funcionar no Safari */
@@ -10,7 +11,7 @@
 
 .v-dialog--fullscreen {
   max-width: 700px;
-  position: initial;
+  position: initial !important;
 }
 
 .header p {

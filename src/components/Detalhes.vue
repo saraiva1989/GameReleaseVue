@@ -1,5 +1,5 @@
 <template>
-  <div v-if="jogo!=null">
+  <v-row v-if="jogo!=null" justify="center">
     <v-dialog
       persistent
       v-model="dialogDetalhes"
@@ -8,13 +8,20 @@
       transition="dialog-bottom-transition"
     >
       <v-card dark>
-        <v-toolbar color="black" >
-          <v-btn icon dark @click="fechar()">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>Detalhes</v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
+        <v-row class="header-detalhe">
+          <v-col cols="10" sm="11">
+            <v-btn icon dark @click="fechar()">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="2" sm="1">
+            <v-btn icon dark @click="salvar()">
+              <v-icon>{{favoritoicon}}</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-spacer></v-spacer>
+
         <v-card dark>
           <v-img :src="carregarImagem" class="white--text align-end" height="350px">
             <div style="background: #00000077">
@@ -84,7 +91,7 @@
         </v-card>
       </v-card>
     </v-dialog>
-  </div>
+  </v-row>
 </template>
 
 <script>
@@ -93,7 +100,8 @@ export default {
   name: "Detalhes",
   data() {
     return {
-      jogoById: null
+      jogoById: null,
+      favoritoicon: "mdi-heart-outline"
     };
   },
   props: ["dialogDetalhes", "jogo"],
@@ -144,9 +152,9 @@ export default {
     }
   },
   methods: {
-    fechar(){
-      this.$emit('cancel')
-      this.jogoById = null
+    fechar() {
+      this.$emit("cancel");
+      this.jogoById = null;
     },
     retornaIconeLoja(id) {
       var icone = null;
@@ -193,13 +201,34 @@ export default {
       return icone;
     },
     async carregarJogo() {
-      await this.$store.dispatch("listarJogos/REQUEST_JOGO_BY_ID", this.jogo.id);
+      await this.$store.dispatch(
+        "listarJogos/REQUEST_JOGO_BY_ID",
+        this.jogo.id
+      );
       this.jogoById = this.$store.state.listarJogos.GET_JOGO_BY_ID;
+    },
+    salvar() {
+      if (localStorage["jogo-"+this.jogo.id]){
+        localStorage.removeItem("jogo-"+this.jogo.id)
+        this.favoritoicon = "mdi-heart-outline"
+      }
+      else{
+      localStorage["jogo-"+this.jogo.id] = JSON.stringify(this.jogo)
+      this.favoritoicon = "mdi-heart"
+      }
     }
   },
   updated() {
-    if (this.jogo != null && this.dialogDetalhes && this.jogoById == null)
-    this.carregarJogo()
+    if (this.jogo != null && this.dialogDetalhes && this.jogoById == null){
+      document.getElementsByClassName('v-dialog v-dialog--active')[0].scrollTop = 0
+      if (localStorage["jogo-"+this.jogo.id]){
+        this.favoritoicon = "mdi-heart"
+      }
+      else{
+        this.favoritoicon = "mdi-heart-outline"
+      }
+      this.carregarJogo();
+    }
   }
 };
 </script>
@@ -215,5 +244,14 @@ export default {
   display: flex;
   align-items: center;
   padding-left: 10px;
+}
+
+.header-detalhe {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  max-width: 700px;
+  margin-right: 0px;
+  margin-left: 0px;
 }
 </style>
