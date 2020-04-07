@@ -27,8 +27,10 @@
             <div style="background: #00000077">
               <v-card-title v-text="jogo.nome"></v-card-title>
               <v-card-text class="detalhesjogo" style="padding-bottom: 0px">
-                <p>{{jogo.nota}}</p>
-                <p>{{jogo.publishers}}</p>
+                <span>
+                  <b>Rating:</b>
+                </span>
+                <span v-html="ratingHtml"></span>
                 <p>
                   <b>Genero:</b>
                   {{genero}}
@@ -86,8 +88,10 @@
             ></v-carousel-item>
           </v-carousel>
         </v-card>
-        <v-card dark class="card">
-          <iframe :src="jogo.videoyoutube" frameborder="0"></iframe>
+        <v-card dark class="card" v-if="jogo.videoyoutube != 'https://www.youtube.com/embed/'">
+          <div>
+            <iframe :src="jogo.videoyoutube" frameborder="0" width="100%" height="300px"></iframe>
+          </div>
         </v-card>
       </v-card>
     </v-dialog>
@@ -101,7 +105,8 @@ export default {
   data() {
     return {
       jogoById: null,
-      favoritoicon: "mdi-heart-outline"
+      favoritoicon: "mdi-heart-outline",
+      ratingHtml: ""
     };
   },
   props: ["dialogDetalhes", "jogo"],
@@ -200,6 +205,24 @@ export default {
       }
       return icone;
     },
+    retornaRating() {
+      var temp = this.jogo.nota;
+      var retorno = ""
+      console.log(this.jogo.nota);
+      for (let index = 0; index < 5; index++) {
+        if (temp < 0.5) {
+          retorno += "<i aria-hidden='true' class='v-icon notranslate mdi mdi-star-outline theme--dark'></i>";
+        } else if (temp >= 0.5 && temp < 1) {
+          temp -= 0.5;
+          retorno += "<i aria-hidden='true' class='v-icon notranslate mdi mdi-star-half-full theme--dark'></i>";
+        } else {
+          temp -= 1;
+          retorno += "<i aria-hidden='true' class='v-icon notranslate mdi mdi-star theme--dark'></i>";
+        }
+      }
+      this.ratingHtml = retorno
+      console.log(this.jogo.nota)
+    },
     async carregarJogo() {
       await this.$store.dispatch(
         "listarJogos/REQUEST_JOGO_BY_ID",
@@ -208,24 +231,25 @@ export default {
       this.jogoById = this.$store.state.listarJogos.GET_JOGO_BY_ID;
     },
     salvar() {
-      if (localStorage["jogo-"+this.jogo.id]){
-        localStorage.removeItem("jogo-"+this.jogo.id)
-        this.favoritoicon = "mdi-heart-outline"
-      }
-      else{
-      localStorage["jogo-"+this.jogo.id] = JSON.stringify(this.jogo)
-      this.favoritoicon = "mdi-heart"
+      if (localStorage["jogo-" + this.jogo.id]) {
+        localStorage.removeItem("jogo-" + this.jogo.id);
+        this.favoritoicon = "mdi-heart-outline";
+      } else {
+        localStorage["jogo-" + this.jogo.id] = JSON.stringify(this.jogo);
+        this.favoritoicon = "mdi-heart";
       }
     }
   },
   updated() {
-    if (this.jogo != null && this.dialogDetalhes && this.jogoById == null){
-      document.getElementsByClassName('v-dialog v-dialog--active')[0].scrollTop = 0
-      if (localStorage["jogo-"+this.jogo.id]){
-        this.favoritoicon = "mdi-heart"
-      }
-      else{
-        this.favoritoicon = "mdi-heart-outline"
+    if (this.jogo != null && this.dialogDetalhes && this.jogoById == null) {
+      this.retornaRating()
+      document.getElementsByClassName(
+        "v-dialog v-dialog--active"
+      )[0].scrollTop = 0;
+      if (localStorage["jogo-" + this.jogo.id]) {
+        this.favoritoicon = "mdi-heart";
+      } else {
+        this.favoritoicon = "mdi-heart-outline";
       }
       this.carregarJogo();
     }
