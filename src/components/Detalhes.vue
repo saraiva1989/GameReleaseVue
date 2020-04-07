@@ -187,7 +187,7 @@ export default {
       var icone = null;
       switch (id) {
         case 4:
-          icone = "mdi-leptop-windows";
+          icone = "mdi-laptop-windows";
           break;
         case 18:
           icone = "mdi-sony-playstation";
