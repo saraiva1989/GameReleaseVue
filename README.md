@@ -1,5 +1,15 @@
 # gamerelease
 
+# Para ver o projeto em funcionamento
+para ver o site funcionando é só acessar http://arcadaweb.com.br/dev/gamerelease/#/
+
+
+# Para rodar o projeto na maquina local
+
+## Acesso a API
+Caso queiram baixar esse projeto para estudar, pode entrar em contato comigo que disponibilizo o acesso a API temporariamente.
+
+
 ## Project setup
 ```
 npm install
