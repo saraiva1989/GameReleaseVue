@@ -1,7 +1,7 @@
 # gamerelease
 
 # Para ver o projeto em funcionamento
-para ver o site funcionando é só acessar http://arcadaweb.com.br/dev/gamerelease/#/
+para ver o site funcionando é só acessar https://saraiva89.com/dev/gamerelease/
 
 
 # Para rodar o projeto na maquina local
