@@ -1,5 +1,5 @@
 import axios from "axios";
-const urlBase = "https://arcadaweb.com.br/api/gamerelease/listagames.php?"
+const urlBase = "https://saraiva89.com/dev/api/gamerelease/listagames.php?"
 export default {
     async REQUEST_JOGOS(context, payload) {
         context.commit('SET_CARREGANDO', true)
