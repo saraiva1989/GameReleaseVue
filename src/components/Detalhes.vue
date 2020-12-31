@@ -195,6 +195,12 @@ export default {
         case 1:
           icone = "mdi-microsoft-xbox";
           break;
+          case 187:
+          icone = "mdi-sony-playstation";
+          break;
+        case 186:
+          icone = "mdi-size-xs";
+          break;
         case 7:
           icone = "mdi-nintendo-switch";
           break;

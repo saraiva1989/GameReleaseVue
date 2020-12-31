@@ -92,10 +92,12 @@ export default {
       consoleSelected: { nome: "Todos", id: "" },
       consoleItens: [
         { nome: "All", id: "" },
-        { nome: "PS4", id: "18" },
-        { nome: "Xbox One", id: "1" },
+        { nome: "PS5", id: "187" },
+        { nome: "XBOX|X/S", id: "186" },
         { nome: "PC", id: "4" },
-        { nome: "Switch", id: "7" }
+        { nome: "Switch", id: "7" },
+        { nome: "PS4", id: "18" },
+        { nome: "Xbox One", id: "1" }
       ]
     };
   },
