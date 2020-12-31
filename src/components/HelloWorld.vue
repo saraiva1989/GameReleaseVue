@@ -11,7 +11,6 @@ export default {
   data: () => ({}),
   methods: {
     goto() {
-      console.log("tst");
       this.$router.push({
         name: "About",
         params: { errors: "123" }

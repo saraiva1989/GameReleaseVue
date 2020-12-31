@@ -208,7 +208,6 @@ export default {
     retornaRating() {
       var temp = this.jogo.nota;
       var retorno = ""
-      console.log(this.jogo.nota);
       for (let index = 0; index < 5; index++) {
         if (temp < 0.5) {
           retorno += "<i aria-hidden='true' class='v-icon notranslate mdi mdi-star-outline theme--dark'></i>";
@@ -221,7 +220,6 @@ export default {
         }
       }
       this.ratingHtml = retorno
-      console.log(this.jogo.nota)
     },
     async carregarJogo() {
       await this.$store.dispatch(
